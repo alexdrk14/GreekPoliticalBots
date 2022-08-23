@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Parasecurity Group</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+#shadow {
+  padding: 16px;
+  border-radius: 25px;
+  box-shadow: 5px 10px 14px #888888;
+}
+.dot_red {
+  height: 25px;
+  width: 25px;
+  background-color: #FF0000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot_green{
+  height: 25px;
+  width: 25px;
+  background-color: #008000;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot_orange{
+height: 25px;
+  width: 25px;
+  background-color: #FFA500;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+
+</style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right"><a href="https://www.parasecurity.edu.gr/home">Parasecurity Group</a></span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container">
+    <h5>Dashboard</h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="/" class="w3-bar-item w3-button w3-padding w3-padding"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
+    <a href="/model_use" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Model Use</a>
+    <a href="/predicted_bots" class="w3-bar-item w3-button w3-blue"><i class="fa fa-eye fa-fw"></i>  Predicted Accounts</a>
+    <a href="/explain" class="w3-bar-item w3-button"><i class="fa fa-user fa-fw"></i>  Explanation</a>
+    <a href="" class="w3-bar-item w3-button w3-padding"><i class="fa fa-info-circle fa-fw"></i>  About</a><br><br>
+  </div>
+</nav>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-eye"></i>Predicted Accounts</b></h5>
+  </header>
+
+   <!--<div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-single">
+      <div id="shadow", class="w3-container w3-white w3-padding-16">
+        <div class="w3-clear"></div>
+        <h5>We initiated a data collection gathering from Twitter regarding the Russo-Ukrainian War, on 24 February, 2022.
+          The main goal is to analyze the main trends and topics discussed in this online discourse, watch the tendencies of users,
+          the suspension of potential malicious entities, the sentiment of the text, the hate speech or any propaganda that may be visible through OSNs.</h5>
+      </div>
+    </div>
+
+  </div>-->
+
+  <div class="w3-panel w3-right">
+    <form action="javascript:Search(this)">
+    <label for="searchInput">Search:</label>
+    <input type="text" id="searchInput" name="search">
+    <!--<input type="submit" value="Go">-->
+    </form>
+  </div>
+
+  <div class="w3-panel">
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div id="shadow",class="w3-single w3-white w3-padding-16">
+        <h5 id="TableHead"></h5>
+        <table class="w3-table w3-striped w3-white" id="botsTable">
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-third">
+      <div class="w3-container  w3-padding-16">
+      </div>
+    </div>
+    <div class="w3-third"><!--<div class="w3-quarter">-->
+      <div class="w3-container w3-padding-16">
+
+        <div class="w3-center" id="arrowButtons">
+           <button class="w3-button w3-dark-grey" onclick="change_page(-1)" id="prevButton"><i class="fa fa-arrow-left"></i></button>
+           <i id="PageNumber"></i>
+           <button class="w3-button w3-dark-grey" onclick="change_page(1)" id="nextButton"><i class="fa fa-arrow-right"></i></button>
+        </div>
+
+      </div>
+    </div>
+    <div class="w3-third">
+      <div class="w3-container w3-padding-16">
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <script>
+    d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/master/data/acounts_scores.csv").then(load_data);
+    var pageIndex = 1;
+    var pageMax = -1;
+    var pageSize = 50;
+
+    var userIds;
+    var screenNames;
+    var profile;
+    var createdAd;
+    var botProb;
+
+    var SearchIndexes = [];
+    var SearchpageIndex = 1;
+    var SearchpageMax = -1;
+
+    function clearTable(){
+      var table = document.getElementById("botsTable");
+      table.innerHTML="";
+      var row = table.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      var cell4 = row.insertCell(3);
+      var cell5 = row.insertCell(4);
+      var cell6 = row.insertCell(5);
+      var cell7 = row.insertCell(6);
+      cell1.innerHTML = "<h6 class=\"w3-left\">User ID</h6>";
+      cell2.innerHTML = "<h6 class=\"w3-left\">Profile Name</h6>";
+      cell3.innerHTML = "<h6 class=\"w3-left\">URL</>";
+      cell4.innerHTML = "<h6 class=\"w3-left\">Creation Date</h6>";
+      cell5.innerHTML = "<h6 class=\"w3-left\">Bot probability</h6>";
+      cell6.innerHTML = "<h6 class=\"w3-left\">Level</h6>";
+      cell7.innerHTML = "<h6 class=\"w3-left\">Why?</h6>";
+    }
+
+    function renderSearch(direction){
+      console.log(direction);
+      if(direction>0 & SearchpageIndex < SearchpageMax ){
+        SearchpageIndex +=1;
+      }else if(direction < 0 & SearchpageIndex > 1){
+        SearchpageIndex -= 1;
+      }else if (direction != 0){
+        return 0;
+      }
+
+      clearTable();
+
+      if(SearchpageMax == -1){
+        SearchpageMax = (SearchIndexes.length / pageSize);
+        if(SearchpageMax*pageSize < SearchIndexes.length){
+          SearchpageMax += 1;
+        }
+      }
+
+      console.log("Here");
+      var ShowPage = document.getElementById("PageNumber");
+      ShowPage.innerHTML = "Page: " + SearchpageIndex + " of " + SearchpageMax;
+      var start = pageSize * (SearchpageIndex - 1);
+      var end = pageSize * SearchpageIndex;
+      if(SearchpageIndex == SearchpageMax){
+        end = SearchIndexes.length;
+      }
+      var table = document.getElementById("botsTable");
+      for (let i = start; i < end; i++) {
+          var row = table.insertRow();
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          var cell4 = row.insertCell(3);
+          var cell5 = row.insertCell(4);
+          var cell6 = row.insertCell(5);
+          var cell7 = row.insertCell(6);
+
+          cell1.innerHTML = userIds[SearchIndexes[i]];
+          cell2.innerHTML = screenNames[SearchIndexes[i]];
+          cell3.innerHTML = "<a href='"+profile[SearchIndexes[i]]+"'>" +profile[SearchIndexes[i]] +"</a>";
+          cell4.innerHTML = createdAd[SearchIndexes[i]];
+          var dot = "<span class=\"dot_orange\"></span>";
+          if(botProb[SearchIndexes[i]] >= 0.75){
+            dot = "<span class=\"dot_red\"></span>";
+          }else if(botProb[SearchIndexes[i]] <= 0.25){
+            dot = "<span class=\"dot_green\"></span>";
+          }
+          cell5.innerHTML = botProb[SearchIndexes[i]];
+          cell6.innerHTML = dot;
+          cell7.innerHTML = "<a href='/explain?username="+screenNames[SearchIndexes[i]]+"'>Explain</a>";
+      }
+
+    }
+
+    function Search(){
+      clearTable();
+      var query = document.getElementById("searchInput").value;
+      if(query.toString().length == 0){
+        console.log(query);
+        return renderTable();
+      }
+
+
+      SearchIndexes = [];
+
+      for (let i = 0; i < userIds.length; i++) {
+        if(screenNames[i].includes(query) || userIds[i].includes(query) || botProb[i].toString().includes(query)  || createdAd[i].includes(query)){
+          SearchIndexes.push(i);
+        }
+      }
+
+      var ShowPage = document.getElementById("PageNumber");
+      ShowPage.innerHTML = "";
+      var head = document.getElementById("TableHead");
+      head.innerHTML = "Search found " + SearchIndexes.length + " results.";
+      SearchpageMax = -1;
+      SearchpageMax = ~~(SearchIndexes.length / pageSize);
+      if(SearchpageMax*pageSize < SearchIndexes.length){
+        SearchpageMax += 1;
+      }
+      SearchpageIndex = 1;
+      var btn = document.getElementById("prevButton");
+      btn.setAttribute( "onClick", "javascript: renderSearch(-1);" );
+      var btn = document.getElementById("nextButton");
+      btn.setAttribute( "onClick", "javascript: renderSearch(1);" );
+      if(SearchIndexes.length > 0) {
+        renderSearch(0);
+      }
+
+    }
+
+    function load_data(data){
+      userIds = data.map(function(d) {return d.usedId;});
+      screenNames = data.map(function(d) {return d.screen_name;});
+      profile = data.map(function(d) {return d.profile;});
+      createdAd = data.map(function(d) {return d.created_at;});
+      botProb = data.map(function(d) {return d.prob;});
+
+      pageMax = ~~(userIds.length / pageSize);
+      if(pageMax*pageSize < userIds.length){
+        pageMax += 1;
+      }
+
+
+      renderTable();
+
+    }
+
+
+    function change_page(direction){
+      if(direction>0 & pageIndex < pageMax ){
+        pageIndex +=1;
+        renderTable();
+      }else{
+        if(direction < 0 & pageIndex > 1){
+          pageIndex -= 1;
+          renderTable();
+        }
+      }
+    }
+
+    function renderTable(){
+      clearTable();
+      var table = document.getElementById("botsTable");
+      var btn = document.getElementById("prevButton");
+      btn.setAttribute( "onClick", "javascript: change_page(-1);" );
+      var btn = document.getElementById("nextButton");
+      btn.setAttribute( "onClick", "javascript: change_page(1);" );
+
+
+      if(pageMax == -1){
+        pageMax = (userIds.length / pageSize);
+        if(pageMax*pageSize < userIds.length){
+          pageMax += 1;
+        }
+      }
+
+      var ShowPage = document.getElementById("PageNumber");
+      ShowPage.innerHTML = "Page: " + pageIndex + " of " + pageMax;
+      var start = pageSize * (pageIndex - 1);
+      var end = pageSize * pageIndex;
+      if(pageIndex == pageMax){
+        end = userIds.length;
+      }
+      var cntBots = 0 ;
+      var cntNormal = 0;
+      ///var head = document.getElementById("TableHead");
+      //head.innerHTML = "Table with predicted bot accounts, presented " + (end - start) + " of " + userIds.length + " results.";
+
+      //pageIndex += 1;
+      for (let i = start; i < end; i++) {
+          var row = table.insertRow();
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          var cell4 = row.insertCell(3);
+          var cell5 = row.insertCell(4);
+          var cell6 = row.insertCell(5);
+          var cell7 = row.insertCell(6);
+
+          cell1.innerHTML = userIds[i];
+          cell2.innerHTML = screenNames[i];
+          cell3.innerHTML = "<a href='"+profile[i]+"'>" +profile[i] +"</a>";
+          cell4.innerHTML = createdAd[i];
+          var dot = "<span class=\"dot_orange\"></span>";
+          if(botProb[i] >= 0.75){
+            dot = "<span class=\"dot_red\"></span>";
+            cntBots ++;
+          }else if(botProb[i] <= 0.25){
+            dot = "<span class=\"dot_green\"></span>";
+            cntNormal ++;
+          }
+          cell5.innerHTML = botProb[i];
+          cell6.innerHTML = dot;
+          cell7.innerHTML = "<a href='/explain?username="+screenNames[i]+"'>Explain</a>";
+      }
+
+      var head = document.getElementById("TableHead");
+      console.log(cntBots);
+      head.innerHTML = "Table with predicted accounts, presented " + (end - start) + " of " + userIds.length + " results."
+
+    }
+
+
+  </script>
+
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-light-grey">
+    <div class="w3-center">
+      <h4>Copyright © Parasecurity Group – All Rights Reserved</h4>
+    </div>
+  </footer>
+
+  <!-- End page content -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
