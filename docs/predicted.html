@@ -135,7 +135,7 @@ height: 25px;
 
 
   <script>
-    d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/master/data/acounts_scores.csv").then(load_data);
+    d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/main/stats/scores.csv").then(load_data);
     var pageIndex = 1;
     var pageMax = -1;
     var pageSize = 50;
@@ -160,14 +160,13 @@ height: 25px;
       var cell4 = row.insertCell(3);
       var cell5 = row.insertCell(4);
       var cell6 = row.insertCell(5);
-      var cell7 = row.insertCell(6);
+
       cell1.innerHTML = "<h6 class=\"w3-left\">User ID</h6>";
       cell2.innerHTML = "<h6 class=\"w3-left\">Profile Name</h6>";
-      cell3.innerHTML = "<h6 class=\"w3-left\">URL</>";
-      cell4.innerHTML = "<h6 class=\"w3-left\">Creation Date</h6>";
-      cell5.innerHTML = "<h6 class=\"w3-left\">Bot probability</h6>";
-      cell6.innerHTML = "<h6 class=\"w3-left\">Level</h6>";
-      cell7.innerHTML = "<h6 class=\"w3-left\">Why?</h6>";
+      cell3.innerHTML = "<h6 class=\"w3-left\">Creation Date</h6>";
+      cell4.innerHTML = "<h6 class=\"w3-left\">Bot probability</h6>";
+      cell5.innerHTML = "<h6 class=\"w3-left\">Level</h6>";
+      cell6.innerHTML = "<h6 class=\"w3-left\">Why?</h6>";
     }
 
     function renderSearch(direction){
@@ -263,9 +262,8 @@ height: 25px;
     }
 
     function load_data(data){
-      userIds = data.map(function(d) {return d.usedId;});
-      screenNames = data.map(function(d) {return d.screen_name;});
-      profile = data.map(function(d) {return d.profile;});
+      userIds = data.map(function(d) {return d.Id;});
+      screenNames = data.map(function(d) {return d.Name;});
       createdAd = data.map(function(d) {return d.created_at;});
       botProb = data.map(function(d) {return d.prob;});
 
@@ -328,13 +326,13 @@ height: 25px;
           var cell3 = row.insertCell(2);
           var cell4 = row.insertCell(3);
           var cell5 = row.insertCell(4);
-          var cell6 = row.insertCell(5);
-          var cell7 = row.insertCell(6);
+          var cell6 = row.insertCell(4);
+
+
 
           cell1.innerHTML = userIds[i];
           cell2.innerHTML = screenNames[i];
-          cell3.innerHTML = "<a href='"+profile[i]+"'>" +profile[i] +"</a>";
-          cell4.innerHTML = createdAd[i];
+          cell3.innerHTML = createdAd[i];
           var dot = "<span class=\"dot_orange\"></span>";
           if(botProb[i] >= 0.75){
             dot = "<span class=\"dot_red\"></span>";
@@ -343,9 +341,10 @@ height: 25px;
             dot = "<span class=\"dot_green\"></span>";
             cntNormal ++;
           }
-          cell5.innerHTML = botProb[i];
-          cell6.innerHTML = dot;
-          cell7.innerHTML = "<a href='/explain?username="+screenNames[i]+"'>Explain</a>";
+          cell5.innerHTML = dot;
+          cell4.innerHTML = botProb[i];
+
+          cell6.innerHTML = "<a href='/explain?username="+screenNames[i]+"'>Explain</a>";
       }
 
       var head = document.getElementById("TableHead");
