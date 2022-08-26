@@ -98,11 +98,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 
     var DataExp;
-    var DataScores;
-    d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/master/data/prediction_explain.csv").then(function(data){
-      DataExp = data;
-      d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/master/data/acounts_scores.csv").then(load_data);
-    });
+
+    d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/main/stats/explanation.csv").then(load_data);
 
     var Header = document.getElementById("Header");
     Header.innerHTML = "Decision Explanation";
@@ -112,7 +109,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     function load_data(data) {
       console.log("Loaded data");
 
-      DataScores = data;
+      DataExp = data;
 
 
       var param;
@@ -127,13 +124,13 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 
 
-    function plot(userName) {
+    function plot(id) {
       //userIds = data.map(function(d) {return d.usedId;});
       //screenNames = data.map(function(d) {return d.screen_name;});
-      console.log(userName);
+      console.log(id);
       var Index = -1;
-      for(let i = 0; i<  DataScores.length; i++){
-        if( DataScores[i].screen_name == userName){
+      for(let i = 0; i<  DataExp.length; i++){
+        if( DataExp[i].Id == id){
           Index = i;
           break;
         }
@@ -146,15 +143,15 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         var plot = document.getElementById("shap");
         plot.innerText = "";
       }
-      console.log( DataScores[Index].screen_name);
-      console.log( DataScores[Index].usedId);
-      var found = -1;
-      for(let i = 0; i < DataExp.length; i++){
-        if(DataExp[i].userId === DataScores[Index].usedId){
-          found = i;
-          break;
-        }
-      }
+
+      console.log( DataExp[Index].Id);
+      var found = Index;
+      //for(let i = 0; i < DataExp.length; i++){
+      //  if(DataExp[i].userId === DataScores[Index].usedId){
+      //    found = i;
+      //    break;
+      //  }
+      //}
       var xArray = [DataExp[found].age, DataExp[found].favourites,DataExp[found].favourites_by_age, DataExp[found].listed,
         DataExp[found].listed_by_age, DataExp[found].statuses, DataExp[found].statuses_by_age, DataExp[found].followers,
         DataExp[found].followers_by_age, DataExp[found].friends, DataExp[found].friends_by_age, DataExp[found].name_len,
@@ -216,7 +213,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
       }];
 
-      var layout = {title: "Explaination of model prediction based on SHAP values for user: @" + userName,
+      var layout = {title: "Explaination of model prediction based on SHAP values for userID: " + id,
                     margin: {
                          l: 200
                     }

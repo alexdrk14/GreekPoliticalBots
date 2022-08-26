@@ -145,6 +145,10 @@ height: 25px;
     var profile;
     var createdAd;
     var botProb;
+    var ND;
+    var SR;
+    var KN;
+    var KK;
 
     var SearchIndexes = [];
     var SearchpageIndex = 1;
@@ -160,6 +164,10 @@ height: 25px;
       var cell4 = row.insertCell(3);
       var cell5 = row.insertCell(4);
       var cell6 = row.insertCell(5);
+      var cell7 = row.insertCell(6);
+      var cell8 = row.insertCell(7);
+      var cell9 = row.insertCell(8);
+      var cell10 = row.insertCell(9);
 
       cell1.innerHTML = "<h6 class=\"w3-left\">User ID</h6>";
       cell2.innerHTML = "<h6 class=\"w3-left\">Profile Name</h6>";
@@ -167,6 +175,11 @@ height: 25px;
       cell4.innerHTML = "<h6 class=\"w3-left\">Bot probability</h6>";
       cell5.innerHTML = "<h6 class=\"w3-left\">Level</h6>";
       cell6.innerHTML = "<h6 class=\"w3-left\">Why?</h6>";
+      cell7.innerHTML = "<h6 class=\"w3-left\">ΝΔ</h6>";
+      cell8.innerHTML = "<h6 class=\"w3-left\">ΣΥΡΙΖΑ</h6>";
+      cell9.innerHTML = "<h6 class=\"w3-left\">ΚΙΝΑΛ</h6>";
+      cell10.innerHTML = "<h6 class=\"w3-left\">ΚΚΕ</h6>";
+
     }
 
     function renderSearch(direction){
@@ -206,20 +219,26 @@ height: 25px;
           var cell5 = row.insertCell(4);
           var cell6 = row.insertCell(5);
           var cell7 = row.insertCell(6);
+          var cell8 = row.insertCell(7);
+          var cell9 = row.insertCell(8);
+          var cell10 = row.insertCell(9);
 
           cell1.innerHTML = userIds[SearchIndexes[i]];
           cell2.innerHTML = screenNames[SearchIndexes[i]];
-          cell3.innerHTML = "<a href='"+profile[SearchIndexes[i]]+"'>" +profile[SearchIndexes[i]] +"</a>";
-          cell4.innerHTML = createdAd[SearchIndexes[i]];
+          cell3.innerHTML = createdAd[SearchIndexes[i]];
           var dot = "<span class=\"dot_orange\"></span>";
           if(botProb[SearchIndexes[i]] >= 0.75){
             dot = "<span class=\"dot_red\"></span>";
           }else if(botProb[SearchIndexes[i]] <= 0.25){
             dot = "<span class=\"dot_green\"></span>";
           }
-          cell5.innerHTML = botProb[SearchIndexes[i]];
-          cell6.innerHTML = dot;
-          cell7.innerHTML = "<a href='/explain?username="+screenNames[SearchIndexes[i]]+"'>Explain</a>";
+          cell4.innerHTML = botProb[SearchIndexes[i]];
+          cell5.innerHTML = dot;
+          cell6.innerHTML = "<a href='/explain?id="+userIds[SearchIndexes[i]]+"'>Explain</a>";
+          cell7.innerHTML = "<h6 style=\"color:" +getColor(ND[SearchIndexes[i]]) +";\">" + ND[SearchIndexes[i]] + "</h6>";
+          cell8.innerHTML = "<h6 style=\"color:" +getColor(SR[SearchIndexes[i]]) +";\">" + SR[SearchIndexes[i]] + "</h6>";
+          cell9.innerHTML = "<h6 style=\"color:" +getColor(KN[SearchIndexes[i]]) +";\">" + KN[SearchIndexes[i]] + "</h6>";
+          cell10.innerHTML = "<h6 style=\"color:" +getColor(KK[SearchIndexes[i]]) +";\">" + KK[SearchIndexes[i]] + "</h6>";
       }
 
     }
@@ -266,6 +285,12 @@ height: 25px;
       screenNames = data.map(function(d) {return d.Name;});
       createdAd = data.map(function(d) {return d.created_at;});
       botProb = data.map(function(d) {return d.prob;});
+      ND = data.map(function(d) {return d["Νεα Δημοκρατια"];});
+
+      SR = data.map(function(d) {return d["Συριζα"];});
+      KN = data.map(function(d) {return d["Κιναλ"];});
+      KK = data.map(function(d) {return d["ΚΚΕ"];});
+
 
       pageMax = ~~(userIds.length / pageSize);
       if(pageMax*pageSize < userIds.length){
@@ -290,6 +315,16 @@ height: 25px;
       }
     }
 
+    function getColor(value){
+      var color = "black";
+      if(value[0] == "-") {
+        color = "red";
+      }else if(value[0] == "+"){
+        color="green";
+      }
+      return color;
+    }
+
     function renderTable(){
       clearTable();
       var table = document.getElementById("botsTable");
@@ -297,7 +332,6 @@ height: 25px;
       btn.setAttribute( "onClick", "javascript: change_page(-1);" );
       var btn = document.getElementById("nextButton");
       btn.setAttribute( "onClick", "javascript: change_page(1);" );
-
 
       if(pageMax == -1){
         pageMax = (userIds.length / pageSize);
@@ -326,8 +360,11 @@ height: 25px;
           var cell3 = row.insertCell(2);
           var cell4 = row.insertCell(3);
           var cell5 = row.insertCell(4);
-          var cell6 = row.insertCell(4);
-
+          var cell6 = row.insertCell(5);
+          var cell7 = row.insertCell(6);
+          var cell8 = row.insertCell(7);
+          var cell9 = row.insertCell(8);
+          var cell10 = row.insertCell(9);
 
 
           cell1.innerHTML = userIds[i];
@@ -341,10 +378,15 @@ height: 25px;
             dot = "<span class=\"dot_green\"></span>";
             cntNormal ++;
           }
-          cell5.innerHTML = dot;
           cell4.innerHTML = botProb[i];
+          cell5.innerHTML = dot;
 
-          cell6.innerHTML = "<a href='/explain?username="+screenNames[i]+"'>Explain</a>";
+
+          cell6.innerHTML = "<a href='/explain?id="+userIds[i]+"'>Explain</a>";
+          cell7.innerHTML = "<h6 style=\"color:" +getColor(ND[i]) +";\">" + ND[i] + "</h6>";
+          cell8.innerHTML = "<h6 style=\"color:" +getColor(SR[i]) +";\">" + SR[i] + "</h6>";
+          cell9.innerHTML = "<h6 style=\"color:" +getColor(KN[i]) +";\">" + KN[i] + "</h6>";
+          cell10.innerHTML = "<h6 style=\"color:" +getColor(KK[i]) +";\">" + KK[i] + "</h6>";
       }
 
       var head = document.getElementById("TableHead");
