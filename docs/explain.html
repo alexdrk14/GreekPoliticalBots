@@ -34,7 +34,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="/" class="w3-bar-item w3-button w3-padding w3-padding"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
+    <a href="/GreekPoliticalBots/index.html" class="w3-bar-item w3-button w3-padding w3-padding"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
     <a href="/GreekPoliticalBots/predicted.html" class="w3-bar-item w3-button"><i class="fa fa-eye fa-fw"></i>  Predicted Accounts</a>
     <a href="/GreekPoliticalBots/explain.html" class="w3-bar-item w3-button w3-blue"><i class="fa fa-user fa-fw"></i>  Explanation</a>
     <a href="" class="w3-bar-item w3-button w3-padding"><i class="fa fa-info-circle fa-fw"></i>  About</a><br><br>
@@ -55,7 +55,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
   <div class="w3-panel w3-right">
     <form action="javascript:plot(document.getElementById('searchInput').value);">
-    <label for="searchInput">Search by username:</label>
+    <label for="searchInput">Search by userID:</label>
     <input type="text" id="searchInput" name="search">
     <!--<input type="submit" value="Go">-->
     </form>
@@ -95,7 +95,39 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
   <script>
 
-
+          var Descriptions = ["Age of user account",
+        "Number of likes that account have made",
+        "User likes by age of the account",
+        "Size of Twitter lists", "Relation between size of Twitter lists and age of the account",
+        "Number of tweets created by user",
+        "Relation between Number of tweets created by user and age of the account",
+        "Number of user followers", "Relation between number of followers and age of the account",
+        "Number of user friends", "Relation between number of user friends and age of the account",
+        "Length of user name (number of characters)", "Length of screen name(number of characters)",
+        "Similarity between screen name and user name",
+        "Percentage of uppercase characters in user name",
+        "Number of lowercase characters in user name",
+        "Percentage of lowercase characters in user name ",
+        "Number of digits used in user name",
+        "Number of special characters in user name",
+        "Number of uppercase characters in screen name",
+        "Number of digits in screen name",
+    "Number of special characters in screen name",
+    "Percentage of special characters in screen name",
+    "Number of uppercase characters in profile description",
+    "Number of lowercase characters in profile description",
+    "Percentage of lowercasecase characters in profile description",
+    "Number of digits in profile description",
+    "Percentage of digits in profile description",
+    "Number of special characters in profile description",
+    "Percentage of special characters in profile description",
+    "Relation between user followers and friends",
+    "Does user utilize geolocation",
+    "Does user provide location",
+    "Does user profile contain default background image",
+    "Does user profile is selected as default profile",
+    "Does profile description contain user URL for different social media or online resource",
+    "Does the profile contain verified signature"];
     var DataExp;
 
     d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/main/stats/explanation.csv").then(load_data);
@@ -103,14 +135,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     var Header = document.getElementById("Header");
     Header.innerHTML = "Decision Explanation";
 
-
-
     function load_data(data) {
-      console.log("Loaded data");
-
       DataExp = data;
-
-
       var param;
       var pos = document.URL.indexOf("?");
       if (pos > 0) {
@@ -118,15 +144,17 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         pos = param.indexOf("=");
 
         plot(param.substring(pos + 1));
+      }else{
+        document.getElementById("shap").innerHTML = "<h4>Search user explanation based on user ID from prediction page</h4>";
       }
     }
 
 
 
     function plot(id) {
-      //userIds = data.map(function(d) {return d.usedId;});
-      //screenNames = data.map(function(d) {return d.screen_name;});
-      console.log(id);
+      var yNames = DataExp.columns;
+      yNames.pop();
+
       var Index = -1;
       for(let i = 0; i<  DataExp.length; i++){
         if( DataExp[i].Id == id){
@@ -136,71 +164,34 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       }
       if(Index < 0){
         var plot = document.getElementById("shap");
-        plot.innerText = "User not found";
+        plot.innerText = "UserID:"+ id +" not found";
         return 0;
       }else{
         var plot = document.getElementById("shap");
         plot.innerText = "";
       }
 
-      console.log( DataExp[Index].Id);
       var found = Index;
-      //for(let i = 0; i < DataExp.length; i++){
-      //  if(DataExp[i].userId === DataScores[Index].usedId){
-      //    found = i;
-      //    break;
-      //  }
-      //}
-      var xArray = [DataExp[found].age, DataExp[found].favourites,DataExp[found].favourites_by_age, DataExp[found].listed,
-        DataExp[found].listed_by_age, DataExp[found].statuses, DataExp[found].statuses_by_age, DataExp[found].followers,
-        DataExp[found].followers_by_age, DataExp[found].friends, DataExp[found].friends_by_age, DataExp[found].name_len,
-        DataExp[found].screen_name_len, DataExp[found].screen_name_sim, DataExp[found].name_upper_pcnt,
-        DataExp[found].name_lower_len, DataExp[found].name_lower_pcnt, DataExp[found].name_digit_len,
-        DataExp[found].name_special_len, DataExp[found].screen_name_upper_len, DataExp[found].screen_name_digit_len,
-    DataExp[found].screen_name_special_len,
-    DataExp[found].screen_name_special_pcnt,
-    DataExp[found].description_upper_len,
-    DataExp[found].description_lower_len,
-    DataExp[found].description_lower_pcnt,
-    DataExp[found].description_digit_len,
-    DataExp[found].description_digit_pcnt,
-    DataExp[found].description_special_len,
-    DataExp[found].description_special_pcnt,
-    DataExp[found].foll_friends,
-    DataExp[found].geo,
-    DataExp[found].location,
-    DataExp[found].background_img,
-    DataExp[found].default_prof,
-    DataExp[found].url,
-    DataExp[found].verified];
-      var yArray = ["Age", "Favourites","Favourites by age", "Number of registered lists", "Lists by age", "Statuses",
-        "Statuses by age", "Followers", "Followers by age", "Friends", "Friends by age", "Length of Name", "Length of screen_name",
-        "Similarity between screen_name and Name", "Name uppercase percentage", "Name lowercase length",
-        "Name lowercase percentage", "Name digit length", "Name special characters length", "Screen name upper len",
-        "screen_name digit len",
-    "screen name special len",
-    "screen_name_special_pcnt",
-    "description upper len",
-    "description lower len",
-    "description_lower_pcnt",
-    "description_digit_len",
-    "description_digit_pcnt",
-    "description_special_len",
-    "description_special_pcnt",
-    "foll_friends",
-    "geo",
-    "location",
-    "background_img",
-    "default_prof",
-    "url",
-    "verified"];
+
+      var xArray = [];
+      var yArray = [];
+      var texts = [];
+
+
       var colors = [];
-      for (let i = 0; i < xArray.length; i++) {
-        if (xArray[i] >= 0) {
+      for (let i = 0; i < yNames.length; i++) {
+        if(DataExp[found][yNames[i]] == 0){
+          continue;
+        }
+        xArray.push(DataExp[found][yNames[i]]);
+        yArray.push(yNames[i]);
+        texts.push(Descriptions[i]);
+        if (DataExp[found][yNames[i]] > 0.0) {
           colors.push("rgba(255,0,0,0.8)");
         } else {
           colors.push("rgba(0,0,255,0.5)");
         }
+
       }
 
       var data = [{
@@ -208,7 +199,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         y: yArray,
         type: "bar",
         orientation: "h",
-        marker: {color: colors}
+        marker: {color: colors},
+        text: texts,
 
       }];
 

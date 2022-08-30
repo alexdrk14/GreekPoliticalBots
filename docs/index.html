@@ -33,7 +33,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="/" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
+    <a href="/GreekPoliticalBots/index.html" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
     <a href="/GreekPoliticalBots/predicted.html" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Predicted Accounts</a>
     <a href="/GreekPoliticalBots/explain.html" class="w3-bar-item w3-button"><i class="fa fa-user fa-fw"></i>  Explanation</a>
     <a href="" class="w3-bar-item w3-button w3-padding"><i class="fa fa-info-circle fa-fw"></i>  About</a><br><br>
@@ -56,9 +56,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <div class="w3-single">
       <div id="shadow", class="w3-container w3-white w3-padding-16">
         <div class="w3-clear"></div>
-        <h5>We initiated a data collection gathering from Twitter regarding the Russo-Ukrainian War, on 24 February, 2022.
-          The main goal is to analyze the main trends and topics discussed in this online discourse, watch the tendencies of users,
-          the suspension of potential malicious entities, the sentiment of the text, the hate speech or any propaganda that may be visible through OSNs.</h5>
+        <h5>Our team managed to create a Machine Learning model that is able to predict automated Twitter accounts, also known as Bots. Here we present the results of our methods based on current real-time users that are collected based on Greek political discussion with use of related hashtags. .</h5>
       </div>
     </div>
 
@@ -111,7 +109,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       <div class="w3-third">
         <div class="w3-container w3-padding-16">
           <div style="width:100%" class="w3-center w3-middle">
-            <h3><br><br><br><br>Daily volume and activity of registered users.
+            <h3><br><br><br><br>Daily activity of registered users.
             <br><h5></h5><br><br><br><br></h3>
           </div>
         </div>
@@ -125,15 +123,15 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
           <div class="w3-third">
             <div class="w3-container w3-padding-16">
               <div style="width:100%" class="w3-center">
-                <h3><br><br><br><br>Daily volume of suspended/deactivated accounts.
-                <br><h5><i>"On daily basis we identify the number of suspended and deactivated users."</i></h5><br><br><br><br></h3>
+                <h3><br><br><br><br>Daily positive sentiment of detected bot accounts.
+                <br><h5><i>"On daily basis we measure positive (supportive) sentiment of accounts that is labeled as bots. Higher values show higher support level."</i></h5><br><br><br><br></h3>
               </div>
               </div>
             </div>
           <div class="w3-twothird">
             <div id="shadow" class="w3-container w3-white w3-padding-16">
               <div style="width:100%" class="w3-center">
-                <canvas id="dailySuspend" style="width:50%" class="w3-left"></canvas>
+                <canvas id="dailyBot" style="width:50%" class="w3-left"></canvas>
               </div>
             </div>
           </div>
@@ -144,7 +142,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
           <div class="w3-twothird">
             <div id="shadow" class="w3-container w3-white w3-padding-16">
               <div style="width:100%" class="w3-center">
-                <canvas id="dailyLang" style="width:50%" class="w3-left"></canvas>
+                <canvas id="dailyNormal" style="width:50%" class="w3-left"></canvas>
               </div>
             </div>
           </div>
@@ -152,50 +150,54 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
           <div class="w3-third">
             <div class="w3-container w3-padding-16">
               <div style="width:100%" class="w3-center">
-                <h3><br><br><br><br>Daily volume of traffic based on text language.
-                <br><h5><i>"Presented only the ten most popular languages in the collected dataset."</i></h5><br><br><br><br></h3>
+                <h3><br><br><br><br>Daily positive sentiment of accounts that is detected as normal.
+                <br><h5><i>"On daily basis we measure positive (supportive) sentiment of accounts that is labeled as normal. Higher values show higher support level."</i></h5><br><br><br><br></h3>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Line of daily hashtag traffic -->
-          <div class="w3-row-padding w3-margin-bottom">
-            <div class="w3-third">
-              <div class="w3-container w3-padding-16">
-                <div style="width:100%" class="w3-center">
-                  <h3><br><br><br><br>Daily volume of HTs traffic.
-                  <br><h5><i>"Presented only the ten most popular hashtags in the collected dataset."</i></h5><br><br><br><br></h3>
-                </div>
+
+        <!-- Line of daily suspend  -->
+        <div class="w3-row-padding w3-margin-bottom">
+          <div class="w3-third">
+            <div class="w3-container w3-padding-16">
+              <div style="width:100%" class="w3-center">
+                <h3><br><br><br><br>Daily negative sentiment of detected bot accounts.
+                <br><h5><i>"On daily basis we measure negative (discouraging) sentiment of accounts that is labeled as bots. Higher values show higher discourage level."</i></h5><br><br><br><br></h3>
+              </div>
               </div>
             </div>
-            <div class="w3-twothird">
-              <div id="shadow" class="w3-container w3-white w3-padding-16">
-                <div style="width:100%" class="w3-center">
-                  <canvas id="dailyHash" style="width:50%" class="w3-left"></canvas>
-                </div>
+          <div class="w3-twothird">
+            <div id="shadow" class="w3-container w3-white w3-padding-16">
+              <div style="width:100%" class="w3-center">
+                <canvas id="dailyBotNeg" style="width:50%" class="w3-left"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- Line of daily lang traffic -->
+        <div class="w3-row-padding w3-margin-bottom">
+          <div class="w3-twothird">
+            <div id="shadow" class="w3-container w3-white w3-padding-16">
+              <div style="width:100%" class="w3-center">
+                <canvas id="dailyNormalNeg" style="width:50%" class="w3-left"></canvas>
               </div>
             </div>
           </div>
 
-          <!-- Line of daily hashtag traffic -->
-            <div class="w3-row-padding w3-margin-bottom">
-              <div class="w3-twothird">
-                <div id="shadow" class="w3-container w3-white w3-padding-16">
-                  <div style="width:100%" class="w3-center">
-                    <canvas id="allLang" style="width:50%" class="w3-left"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="w3-third">
-                <div class="w3-container w3-padding-16">
-                  <div style="width:100%" class="w3-center">
-                    <h3><br><br><br><br>Total tweets' volume based on text language
-                    <br><h5><i>"Presented all languages in the collected dataset.."</i></h5><br><br><br><br></h3>
-                  </div>
-                </div>
+          <div class="w3-third">
+            <div class="w3-container w3-padding-16">
+              <div style="width:100%" class="w3-center">
+                <h3><br><br><br><br>Daily negative sentiment of accounts that is detected as normal.
+                <br><h5><i>"On daily basis we measure negative (discouraging) sentiment of accounts that is labeled as normal. Higher values show higher discourage level."</i></h5><br><br><br><br></h3>
               </div>
             </div>
+          </div>
+        </div>
+
+
 
   <script>
   d3.csv("https://raw.githubusercontent.com/alexdrk14/RussiaUkraineWar_website/main/data/index_stats.txt").then(updateData);
@@ -208,79 +210,75 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     document.getElementById("active_days").innerText = activedays;
 
   };
-  d3.csv("https://raw.githubusercontent.com/alexdrk14/RussiaUkraineWar_website/main/data/suspension.csv").then(makeChart);
- function makeChart(data) {
-      var date = data.map(function(d) {return d.date;});
-      var suspend = data.map(function(d) {return d.suspend;});
-      var deactive = data.map(function(d) {return d.deactive;});
+  var DataBot;
+  var DataNormal;
 
-      new Chart("dailySuspend", {
-      type: "line",
-      data: {
-        labels: date,
-        datasets: [{
-          label: "Suspended users",
-          data: suspend,
-          borderColor: "red",
-          fill: false
-        },{
-          label: "Deactivated users",
-          data: deactive,
-          borderColor: "blue",
-          fill: false
-        }]
-      },
-      options: {
-        legend: {display: true},
-        scales: {
-            xAxes: [{
-                gridLines: {
-                    display:false
-                }
-            }]
-        }
-      }
-      });
+  d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/main/stats/sentiment_by_day_normal.csv").then(load_data_bot);
 
-     new Chart("dailyDeactive", {
-     type: "line",
-     data: {
-       labels: date,
-       datasets: [{
-         fill: false,
-         lineTension: 0,
-         backgroundColor: "rgba(0,0,255,1.0)",
-         borderColor: "rgba(0,0,255,0.1)",
-         data: deactive
-       }]
-     },
-     options: {
-       legend: {display: false},
-     }
-    });
+  function load_data_bot(data) {
+    DataBot = data;
+    d3.csv("https://raw.githubusercontent.com/alexdrk14/GreekPoliticalBots/main/stats/sentiment_by_day_bot.csv").then(makeChart);
+
   };
 
-  d3.csv("https://raw.githubusercontent.com/alexdrk14/RussiaUkraineWar_website/main/data/daily_stats.csv").then(makeChart2);
-  function makeChart2(data) {
-      var date = data.map(function(d) {return d.day;});
-      var daily_users = data.map(function(d) {return d.daily_users;});
-      var daily_tweets = data.map(function(d) {return d.daily_tweets;});
+  function makeChart(data) {
+      DataNormal = data;
+      var date = DataBot.map(function(d) {return d.date;});
 
+      //console.log(DataNormal["date"]);
       new Chart("dailyTraffic", {
+        type: "line",
+        data: {
+          labels: DataBot.map(function(d) {return d.date;}),
+          datasets: [{
+            label: "Bot accounts",
+            data: DataBot.map(function(d) {return d.actions;}),
+            borderColor: "red",
+            fill: false
+          }, {
+            label: "Normal accounts",
+            data: DataNormal.map(function(d) {return d.actions;}),
+            borderColor: "blue",
+            fill: false
+          }]
+        },
+        options: {
+          legend: {display: true},
+          scales: {
+            xAxes: [{
+              gridLines: {
+                display: false
+              }
+            }]
+          }
+        }
+      });
+
+      new Chart("dailyBot", {
       type: "line",
       data: {
-        labels: date,
+        labels: DataBot.map(function(d) {return d.date;}),
         datasets: [{
-          label: "User activity",
-          data: daily_tweets,
+          label: "Νεα Δημοκρατια",
+          data: DataBot.map(function(d) {return d.positive_for_ΝεαΔημοκρατια;}),
           borderColor: "blue",
           fill: false
         },{
-          label: "Active users",
-          data: daily_users,
+          label: "Συριζα",
+          data: DataBot.map(function(d) {return d.positive_for_Συριζα;}),
+          borderColor: "black",
+          fill: false
+        },{
+          label: "Κιναλ",
+          data: DataBot.map(function(d) {return d.positive_for_Κιναλ;}),
+          borderColor: "green",
+          fill: false
+        },{
+          label: "ΚΚΕ",
+          data: DataBot.map(function(d) {return d.positive_for_ΚΚΕ;}),
           borderColor: "red",
           fill: false
-        }
+        },
          ]
       },
       options: {
@@ -294,205 +292,132 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         }
       }
       });
+
+
+        new Chart("dailyNormal", {
+      type: "line",
+      data: {
+        labels: DataNormal.map(function(d) {return d.date;}),
+        datasets: [{
+          label: "Νεα Δημοκρατια",
+          data: DataNormal.map(function(d) {return d.positive_for_ΝεαΔημοκρατια;}),
+          borderColor: "blue",
+          fill: false
+        },{
+          label: "Συριζα",
+          data: DataNormal.map(function(d) {return d.positive_for_Συριζα;}),
+          borderColor: "black",
+          fill: false
+        },{
+          label: "Κιναλ",
+          data: DataNormal.map(function(d) {return d.positive_for_Κιναλ;}),
+          borderColor: "green",
+          fill: false
+        },{
+          label: "ΚΚΕ",
+          data: DataNormal.map(function(d) {return d.positive_for_ΚΚΕ;}),
+          borderColor: "red",
+          fill: false
+        },
+         ]
+      },
+      options: {
+        legend: {display: true},
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display:false
+                }
+            }]
+        }
+      }
+      });
+
+
+      new Chart("dailyBotNeg", {
+      type: "line",
+      data: {
+        labels: DataBot.map(function(d) {return d.date;}),
+        datasets: [{
+          label: "Νεα Δημοκρατια",
+          data: DataBot.map(function(d) {return d.negative_for_ΝεαΔημοκρατια;}),
+          borderColor: "blue",
+          fill: false
+        },{
+          label: "Συριζα",
+          data: DataBot.map(function(d) {return d.negative_for_Συριζα;}),
+          borderColor: "black",
+          fill: false
+        },{
+          label: "Κιναλ",
+          data: DataBot.map(function(d) {return d.negative_for_Κιναλ;}),
+          borderColor: "green",
+          fill: false
+        },{
+          label: "ΚΚΕ",
+          data: DataBot.map(function(d) {return d.negative_for_ΚΚΕ;}),
+          borderColor: "red",
+          fill: false
+        },
+         ]
+      },
+      options: {
+        legend: {display: true},
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display:false
+                }
+            }]
+        }
+      }
+      });
+
+
+        new Chart("dailyNormalNeg", {
+      type: "line",
+      data: {
+        labels: DataNormal.map(function(d) {return d.date;}),
+        datasets: [{
+          label: "Νεα Δημοκρατια",
+          data: DataNormal.map(function(d) {return d.negative_for_ΝεαΔημοκρατια;}),
+          borderColor: "blue",
+          fill: false
+        },{
+          label: "Συριζα",
+          data: DataNormal.map(function(d) {return d.negative_for_Συριζα;}),
+          borderColor: "black",
+          fill: false
+        },{
+          label: "Κιναλ",
+          data: DataNormal.map(function(d) {return d.negative_for_Κιναλ;}),
+          borderColor: "green",
+          fill: false
+        },{
+          label: "ΚΚΕ",
+          data: DataNormal.map(function(d) {return d.negative_for_ΚΚΕ;}),
+          borderColor: "red",
+          fill: false
+        },
+         ]
+      },
+      options: {
+        legend: {display: true},
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display:false
+                }
+            }]
+        }
+      }
+      });
+
      };
 
-     d3.csv("https://raw.githubusercontent.com/alexdrk14/RussiaUkraineWar_website/main/data/daily_lang.csv").then(makeChart3);
-    function makeChart3(data) {
-         var date = data.map(function(d) {return d.date;});
-         var daily_en = data.map(function(d) {return d.en;});
-         var daily_fr = data.map(function(d) {return d.fr;});
-         var daily_und = data.map(function(d) {return d.und;});
-         var daily_de = data.map(function(d) {return d.de;});
-         var daily_es = data.map(function(d) {return d.es;});
-         var daily_it = data.map(function(d) {return d.it;});
-         var daily_ja = data.map(function(d) {return d.ja;});
-         var daily_hi = data.map(function(d) {return d.hi;});
-         var daily_th = data.map(function(d) {return d.th;});
-         var daily_pl = data.map(function(d) {return d.pl;});
 
 
-     new Chart("dailyLang", {
-     type: "line",
-     data: {
-       labels: date,
-       datasets: [{
-         label: "En",
-         data: daily_en,
-         borderColor: "blue",
-         fill: false
-       },{
-         label: "Fr",
-         data: daily_fr,
-         borderColor: "#ff6b62",
-         fill: false
-       },{
-         label: "Undefined",
-         data: daily_und,
-         borderColor: "#3aa86c",
-         fill: false
-       },{
-         label: "De",
-         data: daily_de,
-         borderColor: "black",
-         fill: false
-       },{
-         label: "Es",
-         data: daily_es,
-         borderColor: "#01cdfe",
-         fill: false
-       },{
-         label: "It",
-         data: daily_it,
-         borderColor: "#edfc46",
-         fill: false
-       },{
-         label: "Ja",
-         data: daily_ja,
-         borderColor: "#a61a09",
-         fill: false
-       },{
-         label: "Hi",
-         data: daily_hi,
-         borderColor: "#a17538",
-         fill: false
-       },{
-         label: "Th",
-         data: daily_th,
-         borderColor: "#85b2c1",
-         fill: false
-       },{
-         label: "Pl",
-         data: daily_pl,
-         borderColor: "#a57a6e",
-         fill: false
-       }]
-     },
-     options: {
-       legend: {display: true},
-       scales: {
-           xAxes: [{
-               gridLines: {
-                   display:false
-               }
-           }]
-       }
-     }
-     });
-   };
 
-   d3.csv("https://raw.githubusercontent.com/alexdrk14/RussiaUkraineWar_website/main/data/daily_hashtags.csv").then(makeChart4);
-  function makeChart4(data) {
-       var date = data.map(function(d) {return d.date;});
-       var hsUkraine = data.map(function(d) {return d.Ukraine;});
-       var hsRussia = data.map(function(d) {return d.Russia;});
-       var hsStandWithUkraine = data.map(function(d) {return d.StandWithUkraine;});
-       var hsPutin = data.map(function(d) {return d.Putin;});
-       var hsUkraineRussiaWar = data.map(function(d) {return d.UkraineRussiaWar;});
-       var hsStopPutin = data.map(function(d) {return d.StopPutin;});
-       var hsStopRussia = data.map(function(d) {return d.StopRussia;});
-       var hsStopWar = data.map(function(d) {return d.StopWar;});
-       var hsKyiv = data.map(function(d) {return d.Kyiv;});
-       var hsNato = data.map(function(d) {return d.Nato;});
-
-
-   new Chart("dailyHash", {
-   type: "line",
-   data: {
-     labels: date,
-     datasets: [{
-       label: "#Ukraine",
-       data: hsUkraine,
-       borderColor: "blue",
-       fill: false
-     },{
-       label: "#Russia",
-       data: hsRussia,
-       borderColor: "#ff6b62",
-       fill: false
-     },{
-       label: "#StandWithUkraine",
-       data: hsStandWithUkraine,
-       borderColor: "#3aa86c",
-       fill: false
-     },{
-       label: "#Putin",
-       data: hsPutin,
-       borderColor: "black",
-       fill: false
-     },{
-       label: "#UkraineRussiaWar",
-       data: hsUkraineRussiaWar,
-       borderColor: "#01cdfe",
-       fill: false
-     },{
-       label: "#StopPutin",
-       data: hsStopPutin,
-       borderColor: "#edfc46",
-       fill: false
-     },{
-       label: "#StopRussia",
-       data: hsStopRussia,
-       borderColor: "#a61a09",
-       fill: false
-     },{
-       label: "#StopWar",
-       data: hsStopWar,
-       borderColor: "#a17538",
-       fill: false
-     },{
-       label: "#Kyiv",
-       data: hsKyiv,
-       borderColor: "#85b2c1",
-       fill: false
-     },{
-       label: "#Nato",
-       data: hsNato,
-       borderColor: "#a57a6e",
-       fill: false
-     }]
-   },
-   options: {
-     legend: {display: true},
-     scales: {
-         xAxes: [{
-             gridLines: {
-                 display:false
-             }
-         }]
-     }
-   }
-   });
- };
-
-   d3.csv("https://raw.githubusercontent.com/alexdrk14/RussiaUkraineWar_website/main/data/all_languages_data.csv").then(makeChart5);
-  function makeChart5(data) {
-       var lang = data.map(function(d) {return d.language;});
-       var number = data.map(function(d) {return d.number;});
-       function generateRandomColor() {
-          var letters = '0123456789ABCDEF';
-          var color = '#';
-          for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-          }
-          return color;
-       }
-
-       var randomColor= [];
-       for(var i = 0; i < lang.length; i++) {
-         randomColor.push(generateRandomColor());//"#F10531"
-       }
-
-   new Chart("allLang", {
-   type: 'doughnut',
-   data: {
-     labels: lang,
-     datasets: [{
-       data: number,
-       backgroundColor: randomColor,
-     }],
-   }
-   });
-  };
 
   </script>
 

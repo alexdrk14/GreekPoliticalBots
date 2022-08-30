@@ -57,7 +57,7 @@ height: 25px;
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="/" class="w3-bar-item w3-button w3-padding w3-padding"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
+    <a href="/GreekPoliticalBots/index.html" class="w3-bar-item w3-button w3-padding w3-padding"><i class="fa fa-dashboard fa-fw"></i>  Overview</a>
     <a href="/GreekPoliticalBots/predicted.html" class="w3-bar-item w3-button w3-blue"><i class="fa fa-eye fa-fw"></i>  Predicted Accounts</a>
     <a href="/GreekPoliticalBots/explain.html" class="w3-bar-item w3-button"><i class="fa fa-user fa-fw"></i>  Explanation</a>
     <a href="" class="w3-bar-item w3-button w3-padding"><i class="fa fa-info-circle fa-fw"></i>  About</a><br><br>
@@ -139,15 +139,9 @@ height: 25px;
     var pageMax = -1;
     var pageSize = 50;
 
-    var userIds;
-    var screenNames;
-    var profile;
-    var createdAd;
-    var botProb;
-    var ND;
-    var SR;
-    var KN;
-    var KK;
+    var Data;
+    var columns = ["Id", "Name", "created_at", "prob", "Νεα Δημοκρατια", "Συριζα", "Κιναλ", "ΚΚΕ"];
+
 
     var SearchIndexes = [];
     var SearchpageIndex = 1;
@@ -156,33 +150,19 @@ height: 25px;
     function clearTable(){
       var table = document.getElementById("botsTable");
       table.innerHTML="";
-      var row = table.insertRow();
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      var cell4 = row.insertCell(3);
-      var cell5 = row.insertCell(4);
-      var cell6 = row.insertCell(5);
-      var cell7 = row.insertCell(6);
-      var cell8 = row.insertCell(7);
-      var cell9 = row.insertCell(8);
-      var cell10 = row.insertCell(9);
+      var headers = ["User ID","Profile Name","Creation Date","Probability","Risk Level", "Why?","ΝΔ", "ΣΥΡΙΖΑ","ΚΙΝΑΛ", "ΚΚΕ"];
 
-      cell1.innerHTML = "<h6 class=\"w3-left\">User ID</h6>";
-      cell2.innerHTML = "<h6 class=\"w3-left\">Profile Name</h6>";
-      cell3.innerHTML = "<h6 class=\"w3-left\">Creation Date</h6>";
-      cell4.innerHTML = "<h6 class=\"w3-left\">Bot probability</h6>";
-      cell5.innerHTML = "<h6 class=\"w3-left\">Level</h6>";
-      cell6.innerHTML = "<h6 class=\"w3-left\">Why?</h6>";
-      cell7.innerHTML = "<h6 class=\"w3-left\">ΝΔ</h6>";
-      cell8.innerHTML = "<h6 class=\"w3-left\">ΣΥΡΙΖΑ</h6>";
-      cell9.innerHTML = "<h6 class=\"w3-left\">ΚΙΝΑΛ</h6>";
-      cell10.innerHTML = "<h6 class=\"w3-left\">ΚΚΕ</h6>";
+      var row = table.insertRow();
+      var cell;
+      for(let j=0; j<headers.length;j++){
+        cell = row.insertCell(j);
+        cell.innerHTML = "<h6 class=\"w3-left\">" + headers[j] + "</h6>";
+      }
 
     }
 
     function renderSearch(direction){
-      console.log(direction);
+
       if(direction>0 & SearchpageIndex < SearchpageMax ){
         SearchpageIndex +=1;
       }else if(direction < 0 & SearchpageIndex > 1){
@@ -199,8 +179,6 @@ height: 25px;
           SearchpageMax += 1;
         }
       }
-
-      console.log("Here");
       var ShowPage = document.getElementById("PageNumber");
       ShowPage.innerHTML = "Page: " + SearchpageIndex + " of " + SearchpageMax;
       var start = pageSize * (SearchpageIndex - 1);
@@ -211,33 +189,30 @@ height: 25px;
       var table = document.getElementById("botsTable");
       for (let i = start; i < end; i++) {
           var row = table.insertRow();
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-          var cell3 = row.insertCell(2);
-          var cell4 = row.insertCell(3);
-          var cell5 = row.insertCell(4);
-          var cell6 = row.insertCell(5);
-          var cell7 = row.insertCell(6);
-          var cell8 = row.insertCell(7);
-          var cell9 = row.insertCell(8);
-          var cell10 = row.insertCell(9);
+          var cell;
 
-          cell1.innerHTML = userIds[SearchIndexes[i]];
-          cell2.innerHTML = screenNames[SearchIndexes[i]];
-          cell3.innerHTML = createdAd[SearchIndexes[i]];
+          for(let j=0; j<4; j++){
+            cell = row.insertCell(j);
+            cell.innerHTML = Data[SearchIndexes[i]][columns[j]];
+          }
+
           var dot = "<span class=\"dot_orange\"></span>";
-          if(botProb[SearchIndexes[i]] >= 0.75){
+          if(Data[i]["prob"] >= 0.75){
             dot = "<span class=\"dot_red\"></span>";
-          }else if(botProb[SearchIndexes[i]] <= 0.25){
+          }else if(Data[i]["prob"] <= 0.25){
             dot = "<span class=\"dot_green\"></span>";
           }
-          cell4.innerHTML = botProb[SearchIndexes[i]];
-          cell5.innerHTML = dot;
-          cell6.innerHTML = "<a href='/GreekPoliticalBots/explain.html?id="+userIds[SearchIndexes[i]]+"'>Explain</a>";
-          cell7.innerHTML = "<h6 style=\"color:" +getColor(ND[SearchIndexes[i]]) +";\">" + ND[SearchIndexes[i]] + "</h6>";
-          cell8.innerHTML = "<h6 style=\"color:" +getColor(SR[SearchIndexes[i]]) +";\">" + SR[SearchIndexes[i]] + "</h6>";
-          cell9.innerHTML = "<h6 style=\"color:" +getColor(KN[SearchIndexes[i]]) +";\">" + KN[SearchIndexes[i]] + "</h6>";
-          cell10.innerHTML = "<h6 style=\"color:" +getColor(KK[SearchIndexes[i]]) +";\">" + KK[SearchIndexes[i]] + "</h6>";
+          cell = row.insertCell(4);
+          cell.innerHTML = dot;
+          cell = row.insertCell(5);
+          cell.innerHTML = "<a href='/GreekPoliticalBots/explain.html?id="+Data[SearchIndexes[i]]["Id"]+"'>Explain</a>";
+
+
+          for(let j = 6; j< 10; j++){
+            cell = row.insertCell(j);
+            cell.innerHTML = "<h6 style=\"color:" +getColor(Data[SearchIndexes[i]][columns[j-2]]) +";\">" + Data[SearchIndexes[i]][columns[j-2]] + "</h6>";
+          }
+
       }
 
     }
@@ -246,15 +221,14 @@ height: 25px;
       clearTable();
       var query = document.getElementById("searchInput").value;
       if(query.toString().length == 0){
-        console.log(query);
         return renderTable();
       }
 
 
       SearchIndexes = [];
 
-      for (let i = 0; i < userIds.length; i++) {
-        if(screenNames[i].includes(query) || userIds[i].includes(query) || botProb[i].toString().includes(query)  || createdAd[i].includes(query)){
+      for (let i = 0; i < Data.length; i++) {
+        if(Data[i]["Name"].includes(query) || Data[i]["Id"].includes(query) || Data[i]["prob"].toString().includes(query)  || Data[i]["created_at"].includes(query)){
           SearchIndexes.push(i);
         }
       }
@@ -280,19 +254,11 @@ height: 25px;
     }
 
     function load_data(data){
-      userIds = data.map(function(d) {return d.Id;});
-      screenNames = data.map(function(d) {return d.Name;});
-      createdAd = data.map(function(d) {return d.created_at;});
-      botProb = data.map(function(d) {return d.prob;});
-      ND = data.map(function(d) {return d["Νεα Δημοκρατια"];});
-
-      SR = data.map(function(d) {return d["Συριζα"];});
-      KN = data.map(function(d) {return d["Κιναλ"];});
-      KK = data.map(function(d) {return d["ΚΚΕ"];});
+      Data = data;
 
 
-      pageMax = ~~(userIds.length / pageSize);
-      if(pageMax*pageSize < userIds.length){
+      pageMax = ~~(Data.length / pageSize);
+      if(pageMax*pageSize < Data.length){
         pageMax += 1;
       }
 
@@ -333,8 +299,8 @@ height: 25px;
       btn.setAttribute( "onClick", "javascript: change_page(1);" );
 
       if(pageMax == -1){
-        pageMax = (userIds.length / pageSize);
-        if(pageMax*pageSize < userIds.length){
+        pageMax = (Data[columns[0]].length / pageSize);
+        if(pageMax*pageSize < Data[columns[0]].length){
           pageMax += 1;
         }
       }
@@ -344,53 +310,40 @@ height: 25px;
       var start = pageSize * (pageIndex - 1);
       var end = pageSize * pageIndex;
       if(pageIndex == pageMax){
-        end = userIds.length;
+        end = Data[columns[0]].length;
       }
-      var cntBots = 0 ;
-      var cntNormal = 0;
-      ///var head = document.getElementById("TableHead");
-      //head.innerHTML = "Table with predicted bot accounts, presented " + (end - start) + " of " + userIds.length + " results.";
 
-      //pageIndex += 1;
+
       for (let i = start; i < end; i++) {
           var row = table.insertRow();
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-          var cell3 = row.insertCell(2);
-          var cell4 = row.insertCell(3);
-          var cell5 = row.insertCell(4);
-          var cell6 = row.insertCell(5);
-          var cell7 = row.insertCell(6);
-          var cell8 = row.insertCell(7);
-          var cell9 = row.insertCell(8);
-          var cell10 = row.insertCell(9);
+          var cell;
 
-
-          cell1.innerHTML = userIds[i];
-          cell2.innerHTML = screenNames[i];
-          cell3.innerHTML = createdAd[i];
-          var dot = "<span class=\"dot_orange\"></span>";
-          if(botProb[i] >= 0.75){
-            dot = "<span class=\"dot_red\"></span>";
-            cntBots ++;
-          }else if(botProb[i] <= 0.25){
-            dot = "<span class=\"dot_green\"></span>";
-            cntNormal ++;
+          for(let j=0; j<4; j++){
+            cell = row.insertCell(j);
+            cell.innerHTML = Data[i][columns[j]];
           }
-          cell4.innerHTML = botProb[i];
-          cell5.innerHTML = dot;
+
+          var dot = "<span class=\"dot_orange\"></span>";
+          if(Data[i]["prob"] >= 0.75){
+            dot = "<span class=\"dot_red\"></span>";
+          }else if(Data[i]["prob"] <= 0.25){
+            dot = "<span class=\"dot_green\"></span>";
+          }
+          cell = row.insertCell(4);
+          cell.innerHTML = dot;
+          cell = row.insertCell(5);
+          cell.innerHTML = "<a href='/GreekPoliticalBots/explain.html?id="+Data[i]["Id"]+"'>Explain</a>";
 
 
-          cell6.innerHTML = "<a href='/GreekPoliticalBots/explain.html?id="+userIds[i]+"'>Explain</a>";
-          cell7.innerHTML = "<h6 style=\"color:" +getColor(ND[i]) +";\">" + ND[i] + "</h6>";
-          cell8.innerHTML = "<h6 style=\"color:" +getColor(SR[i]) +";\">" + SR[i] + "</h6>";
-          cell9.innerHTML = "<h6 style=\"color:" +getColor(KN[i]) +";\">" + KN[i] + "</h6>";
-          cell10.innerHTML = "<h6 style=\"color:" +getColor(KK[i]) +";\">" + KK[i] + "</h6>";
+          for(let j = 6; j< 10; j++){
+            cell = row.insertCell(j);
+            cell.innerHTML = "<h6 style=\"color:" +getColor(Data[i][columns[j-2]]) +";\">" + Data[i][columns[j-2]] + "</h6>";
+          }
+
       }
 
       var head = document.getElementById("TableHead");
-      console.log(cntBots);
-      head.innerHTML = "Table with predicted accounts, presented " + (end - start) + " of " + userIds.length + " results."
+      head.innerHTML = "Table with predicted accounts, presented " + (end - start) + " of " + Data.length + " results."
 
     }
 
